@@ -20,13 +20,16 @@ type GridProps = {
 
 const Grid = ({ size, selection, setSelection }: GridProps) => {
   const [dogs, setDogs] = useState<Dog[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   
   useEffect(() => {
     async function fetchUsers(){
+      setIsLoading((loading) => loading = true);
       try {
-        const response = await axios.get(`https://frontend-take-home-service.fetch.com/dogs/search?size=${size}`, { withCredentials: true });
+        const response = await axios.get(`https://frontend-take-home-service.fetch.com/dogs/search?size=100&from=${size}`, { withCredentials: true });
         const result = await axios.post(`https://frontend-take-home-service.fetch.com/dogs`, response.data.resultIds, { withCredentials: true });
         setDogs((current: any) => current = result.data);
+        setIsLoading((loading) => loading = false);
       } catch (error) {
         console.error(error);
       }
@@ -49,7 +52,9 @@ const Grid = ({ size, selection, setSelection }: GridProps) => {
       selection={selection}
       onSelectionChange={(e) => setSelection((current: any) => current = e.value)}
       tableStyle={{ minWidth: '50rem' }}
+      loading={isLoading}
     >
+      <Column field="id" header="ID" style={{ width: '25%' }}></Column>
       <Column field="name" header="Name" style={{ width: '25%' }}></Column>
       <Column field="age" header="Age" style={{ width: '25%' }}></Column>
       <Column field="zip_code" header="Zip Code" style={{ width: '25%' }}></Column>
