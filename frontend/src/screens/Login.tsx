@@ -1,6 +1,5 @@
-import React from 'react'
-import { Card, Col, Container } from 'react-bootstrap'
 import LoginForm from '../components/LoginForm'
+import { Card, Col, Container } from 'react-bootstrap'
 
 const Login = () => {
   return (

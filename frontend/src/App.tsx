@@ -1,15 +1,14 @@
-
 import { Outlet } from 'react-router-dom';
-import { PrimeReactProvider, PrimeReactContext } from 'primereact/api';
-import { ToastContainer } from 'react-bootstrap';
+import { ToastContainer } from 'react-toastify';
+import { PrimeReactProvider } from 'primereact/api';
 
 function App() {
 
   return (
     <>
       <PrimeReactProvider>
-        <ToastContainer />
         <Outlet />
+        <ToastContainer />
       </PrimeReactProvider>
     </>
   )

@@ -27,7 +27,7 @@ const LoginForm = () => {
     e.preventDefault();
     const credentials: {name:string; email:string} = { name: userRef.current.name.value, email: userRef.current.email.value };
     try {
-      const response = await axios.post('https://frontend-take-home-service.fetch.com/auth/login', credentials);
+      const response = await axios.post('https://frontend-take-home-service.fetch.com/auth/login', credentials, { withCredentials: true });
       if (response.status !== 200) return toast.error(`Unable to login`);
       dispatch(setCredentials({ ...credentials }));
       navigate('/home');

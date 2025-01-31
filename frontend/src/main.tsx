@@ -5,7 +5,7 @@ import App from './App.tsx'
 import { createBrowserRouter, createRoutesFromElements, Route, RouterProvider } from 'react-router-dom'
 
 import 'bootstrap/dist/css/bootstrap.min.css';
-import "primereact/resources/themes/lara-light-cyan/theme.css";
+import "primereact/resources/themes/saga-blue/theme.css";
 import 'primeicons/primeicons.css';
 
 import Login from './screens/Login.tsx'
