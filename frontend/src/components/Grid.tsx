@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react'
 import { Column } from 'primereact/column';
 import { DataTable } from 'primereact/datatable'
 
-interface Dog {
+export interface Dog {
   id: string;
   img: string;
   name: string;
@@ -14,29 +14,35 @@ interface Dog {
 
 type GridProps = {
   size: number;
+  dogs: Dog[];
+  setDogs: (param: any) => void;
   selection: any;
-  setSelection: (arg: any) => void
+  setSelection: (arg: any) => void;
+  isLoading: boolean;
+  setLoading: (param: any) => void;
 }
 
-const Grid = ({ size, selection, setSelection }: GridProps) => {
-  const [dogs, setDogs] = useState<Dog[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+const Grid = ({ size, dogs, setDogs, selection, setSelection, isLoading, setLoading  }: GridProps) => {
   
   useEffect(() => {
     async function fetchUsers(){
-      setIsLoading((loading) => loading = true);
+      setLoading((loading: boolean) => loading = true);
       try {
         const response = await axios.get(`https://frontend-take-home-service.fetch.com/dogs/search?size=100&from=${size}`, { withCredentials: true });
         const result = await axios.post(`https://frontend-take-home-service.fetch.com/dogs`, response.data.resultIds, { withCredentials: true });
         setDogs((current: any) => current = result.data);
-        setIsLoading((loading) => loading = false);
+        setLoading((loading: boolean) => loading = false);
       } catch (error) {
         console.error(error);
       }
     }
 
     fetchUsers();
-  }, [size])
+  }, [])
+
+  function imageBodyTemplate(rowData: Dog) {
+    return <img width={'50px'} src={`${rowData.img}`} />
+  }
 
   if (dogs.length === 0) return;
 
@@ -46,19 +52,19 @@ const Grid = ({ size, selection, setSelection }: GridProps) => {
       stripedRows 
       scrollable
       selectionMode='single'
-      scrollHeight='450px' 
+      scrollHeight='650px' 
       value={dogs}
       footer={`${dogs.length} Item(s)`}
       selection={selection}
       onSelectionChange={(e) => setSelection((current: any) => current = e.value)}
       tableStyle={{ minWidth: '50rem' }}
       loading={isLoading}
-    >
-      <Column field="id" header="ID" style={{ width: '25%' }}></Column>
-      <Column field="name" header="Name" style={{ width: '25%' }}></Column>
-      <Column field="age" header="Age" style={{ width: '25%' }}></Column>
-      <Column field="zip_code" header="Zip Code" style={{ width: '25%' }}></Column>
-      <Column field="breed" header="Breed" style={{ width: '25%' }}></Column>
+      >
+      <Column field="img" header="Image" body={imageBodyTemplate} style={{ width: '25%' }}></Column>
+      <Column field="name" header="Name" style={{ width: '20%' }}></Column>
+      <Column field="age" header="Age" style={{ width: '20%' }}></Column>
+      <Column field="zip_code" header="Zip Code" style={{ width: '20%' }}></Column>
+      <Column field="breed" header="Breed" style={{ width: '20%' }}></Column>
     </DataTable>
   )
 }
