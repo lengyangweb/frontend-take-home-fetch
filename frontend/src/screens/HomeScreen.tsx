@@ -14,6 +14,8 @@ const HomeScreen = () => {
   const [ageMax, setAgeMax] = useState<string>('');
   const [selection, setSelection] = useState([]);
   const [isLoading, setLoading] = useState(true);
+  const [next, setNext] = useState();
+  const [previous, setPrevious] = useState();
 
   return (
     <Container fluid>
@@ -37,6 +39,8 @@ const HomeScreen = () => {
                     setAgeMin={setAgeMin}
                     ageMax={ageMax}
                     setAgeMax={setAgeMax}
+                    setNext={setNext}
+                    setPrevious={setPrevious}
                   />
                 </Card>
               </div>

@@ -21,16 +21,17 @@ type SearchProps = {
   setAgeMax: (param: any) => void;
   isLoading: boolean;
   setLoading: (param: any) => void;
+  setPrevious: (param: any) => void;
+  setNext: (param: any) => void;
 }
 
-const Search = ({ size, dogs, setDogs, breeds, setBreeds, zipCodes, setZipCodes, ageMin, setAgeMin, ageMax, setAgeMax, setLoading  }: SearchProps) => {
+const Search = ({ size, dogs, setDogs, breeds, setBreeds, zipCodes, setZipCodes, ageMin, setAgeMin, ageMax, setAgeMax, setLoading, setPrevious, setNext  }: SearchProps) => {
 
   function buildURL() {
     let url = `https://frontend-take-home-service.fetch.com/dogs/search?size${size}`;
     const filterBreeds = breeds.map((breed, index) => {
-      url += '&'
-      if (breed.value.includes(' ')) return `breeds=${breed.value.split(' ').join('%20')}`;
-      return `breeds=${breed.value}`
+      if (breed.value.includes(' ')) return `&breeds=${breed.value.split(' ').join('%20')}`;
+      return `&breeds=${breed.value}`
     })
 
     if (breeds && breeds.length > 0) url += `${filterBreeds.join('')}`;
@@ -46,9 +47,12 @@ const Search = ({ size, dogs, setDogs, breeds, setBreeds, zipCodes, setZipCodes,
     setLoading((current: any) => current = true);
     try {
       const response = await axios.get(url, { withCredentials: true });
-      const result = await axios.post(`https://frontend-take-home-service.fetch.com/dogs`, response.data.resultIds, { withCredentials: true });
+      const result: any = await axios.post(`https://frontend-take-home-service.fetch.com/dogs`, response.data.resultIds, { withCredentials: true });
+      const { next, prev, resultIds, total } = result;
       setLoading((current: any) => current = false);
-      setDogs((current: any) => current = result.data);
+      if (resultIds) setDogs((current: any) => current = resultIds);
+      if (next) setNext((current: string) => current = next);
+      if (prev) setPrevious((current: string) => current = prev);
     } catch (error) {
       setLoading((current: any) => current = false);
       console.error(error);
