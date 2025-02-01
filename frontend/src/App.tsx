@@ -1,10 +1,10 @@
-import { Outlet, useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import { useState } from 'react';
+import { logout } from './slices/authSlice';
 import { ToastContainer } from 'react-toastify';
 import { PrimeReactProvider } from 'primereact/api';
-import { useState } from 'react';
+import { Outlet, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import axios from 'axios';
-import { logout } from './slices/authSlice';
 
 function App() {
   const [interval, setIdleInterval] = useState<any>();

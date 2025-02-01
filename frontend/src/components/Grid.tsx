@@ -24,21 +24,21 @@ type GridProps = {
 
 const Grid = ({ size, dogs, setDogs, selection, setSelection, isLoading, setLoading  }: GridProps) => {
   
-  useEffect(() => {
-    async function fetchUsers(){
-      setLoading((loading: boolean) => loading = true);
-      try {
-        const response = await axios.get(`https://frontend-take-home-service.fetch.com/dogs/search?size=100&from=${size}`, { withCredentials: true });
-        const result = await axios.post(`https://frontend-take-home-service.fetch.com/dogs`, response.data.resultIds, { withCredentials: true });
-        setDogs((current: any) => current = result.data);
-        setLoading((loading: boolean) => loading = false);
-      } catch (error) {
-        console.error(error);
-      }
-    }
+  // useEffect(() => {
+  //   async function fetchUsers(){
+  //     setLoading((loading: boolean) => loading = true);
+  //     try {
+  //       const response = await axios.get(`https://frontend-take-home-service.fetch.com/dogs/search?size=100&from=${size}`, { withCredentials: true });
+  //       const result = await axios.post(`https://frontend-take-home-service.fetch.com/dogs`, response.data.resultIds, { withCredentials: true });
+  //       setDogs((current: any) => current = result.data);
+  //       setLoading((loading: boolean) => loading = false);
+  //     } catch (error) {
+  //       console.error(error);
+  //     }
+  //   }
 
-    fetchUsers();
-  }, [])
+  //   fetchUsers();
+  // }, [])
 
   function imageBodyTemplate(rowData: Dog) {
     return <img width={'50px'} src={`${rowData.img}`} />
@@ -52,7 +52,7 @@ const Grid = ({ size, dogs, setDogs, selection, setSelection, isLoading, setLoad
       stripedRows 
       scrollable
       selectionMode='single'
-      scrollHeight='650px' 
+      scrollHeight='450px' 
       value={dogs}
       footer={`${dogs.length} Item(s)`}
       selection={selection}
@@ -60,11 +60,11 @@ const Grid = ({ size, dogs, setDogs, selection, setSelection, isLoading, setLoad
       tableStyle={{ minWidth: '50rem' }}
       loading={isLoading}
       >
-      <Column field="img" header="Image" body={imageBodyTemplate} style={{ width: '25%' }}></Column>
-      <Column field="name" header="Name" style={{ width: '20%' }}></Column>
-      <Column field="age" header="Age" style={{ width: '20%' }}></Column>
-      <Column field="zip_code" header="Zip Code" style={{ width: '20%' }}></Column>
-      <Column field="breed" header="Breed" style={{ width: '20%' }}></Column>
+      <Column field="img" header="Image" body={imageBodyTemplate} style={{ width: '15%' }}></Column>
+      <Column field="name" header="Name" style={{ width: '25%' }}></Column>
+      <Column field="age" header="Age" style={{ width: '15%' }}></Column>
+      <Column field="zip_code" header="Zip Code" style={{ width: '15%' }}></Column>
+      <Column field="breed" header="Breed" style={{ width: '30%' }}></Column>
     </DataTable>
   )
 }

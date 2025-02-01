@@ -21,15 +21,16 @@ type SearchProps = {
   setAgeMax: (param: any) => void;
   isLoading: boolean;
   setLoading: (param: any) => void;
+  setTotal: (param: any) => void;
   setPrevious: (param: any) => void;
   setNext: (param: any) => void;
 }
 
-const Search = ({ size, dogs, setDogs, breeds, setBreeds, zipCodes, setZipCodes, ageMin, setAgeMin, ageMax, setAgeMax, setLoading, setPrevious, setNext  }: SearchProps) => {
+const Search = ({ size, dogs, setDogs, breeds, setBreeds, zipCodes, setZipCodes, ageMin, setAgeMin, ageMax, setAgeMax, setLoading, setTotal, setPrevious, setNext  }: SearchProps) => {
 
   function buildURL() {
-    let url = `https://frontend-take-home-service.fetch.com/dogs/search?size${size}`;
-    const filterBreeds = breeds.map((breed, index) => {
+    let url = `https://frontend-take-home-service.fetch.com/dogs/search?size=${size}`;
+    const filterBreeds = breeds.map((breed) => {
       if (breed.value.includes(' ')) return `&breeds=${breed.value.split(' ').join('%20')}`;
       return `&breeds=${breed.value}`
     })
@@ -47,12 +48,14 @@ const Search = ({ size, dogs, setDogs, breeds, setBreeds, zipCodes, setZipCodes,
     setLoading((current: any) => current = true);
     try {
       const response = await axios.get(url, { withCredentials: true });
-      const result: any = await axios.post(`https://frontend-take-home-service.fetch.com/dogs`, response.data.resultIds, { withCredentials: true });
-      const { next, prev, resultIds, total } = result;
-      setLoading((current: any) => current = false);
-      if (resultIds) setDogs((current: any) => current = resultIds);
+      const { next, prev, resultIds, total } = response.data;
       if (next) setNext((current: string) => current = next);
       if (prev) setPrevious((current: string) => current = prev);
+      if (total) setTotal((current: number) => current = total);
+      
+      const result: any = await axios.post(`https://frontend-take-home-service.fetch.com/dogs`, resultIds, { withCredentials: true });
+      setLoading((current: any) => current = false);
+      if (result.data) setDogs((current: any) => current = result.data);
     } catch (error) {
       setLoading((current: any) => current = false);
       console.error(error);
@@ -62,36 +65,36 @@ const Search = ({ size, dogs, setDogs, breeds, setBreeds, zipCodes, setZipCodes,
   return (
     <Form onSubmit={handleSubmit}>
       <Row>
-        <Col xs={12} lg={6}>
+        <Col xs={12} lg={12}>
           <Form.Group>
             <Form.Label htmlFor="search">Breeds:</Form.Label><br/>
             <DogBreeds selectedBreed={breeds} setSelectedBreed={setBreeds} />
           </Form.Group>
         </Col>
-        <Col xs={12} lg={6}>
+        <Col xs={12} lg={12}>
           <Row>
             <Col xs={12}>
               <Form.Group>
                 <Form.Label htmlFor="zipCodes">ZipCodes:</Form.Label><br/>
-                <InputText type="text" id="zipCodes" value={zipCodes} onChange={(e) => setZipCodes((current: any) => current = e.target.value)} />
+                <InputText className="w-100" type="text" id="zipCodes" value={zipCodes} onChange={(e) => setZipCodes((current: any) => current = e.target.value)} />
               </Form.Group>
             </Col>
             <Col xs={12} lg={12}>
               <Form.Group>
                 <Form.Label htmlFor="ageMin">Minimum Age:</Form.Label><br/>
-                <InputText type="number" id="ageMin" value={ageMin} onChange={(e) => setAgeMin((current: any) => current = e.target.value)} />
+                <InputText className="w-100" type="number" id="ageMin" value={ageMin} onChange={(e) => setAgeMin((current: any) => current = e.target.value)} />
               </Form.Group>
             </Col>
             <Col xs={12} lg={12}>
               <Form.Group>
                 <Form.Label htmlFor="maxAge">Maximum Age:</Form.Label><br/>
-                <InputText type="number" id="maxAge" value={ageMax} onChange={(e) => setAgeMax((current: any) => current = e.target.value)} />
+                <InputText className="w-100" type="number" id="maxAge" value={ageMax} onChange={(e) => setAgeMax((current: any) => current = e.target.value)} />
               </Form.Group>
             </Col>
           </Row>
         </Col>
       </Row>
-      <div className="mt-3 d-flex justify-content-end">
+      <div className="mt-3 d-flex justify-content-center">
         <Button className="rounded" label="Search" icon="pi pi-search" iconPos="right" />
       </div>
     </Form>

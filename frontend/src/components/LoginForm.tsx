@@ -49,7 +49,7 @@ const LoginForm = () => {
       </div>
       <div className="form-group mt-4">
         <div className="d-flex justify-content-center">
-          <Button className="rounded" label="Login" type="button" onClick={handleLogin} />
+          <Button className="rounded" label="Login" type="button" icon="pi pi-sign-in" iconPos="right" onClick={handleLogin} />
         </div>
       </div>
     </form>

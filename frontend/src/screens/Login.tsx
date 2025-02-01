@@ -5,7 +5,10 @@ const Login = () => {
   return (
     <Container fluid>
       <div className="d-flex justify-content-center align-items-center mt-4">
-          <Col xs={12} lg={3}>
+          <Col xs={12} lg={4}>
+            <div className="d-flex justify-content-center my-3">
+              <h3 className='bg-dark text-light rounded p-3'>Fetch Frontend Take-Home</h3>
+            </div>
             <Card>
               <Card.Header>
                 <h5>Login Form</h5>
