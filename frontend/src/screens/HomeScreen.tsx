@@ -5,6 +5,7 @@ import Search from "../components/Search"
 import { Col, Container, Row } from "react-bootstrap"
 import { Button } from "primereact/button"
 import axios from "axios"
+import DogView from "../components/DogView"
 
 const HomeScreen = () => {
   const size = 100;
@@ -20,6 +21,7 @@ const HomeScreen = () => {
   const [prevSelection, setPrevious] = useState<string>('');
   const [currentCount, setCurrentCount] = useState<number>(0);
   const [sort, setSort] = useState<string>('asc');
+  const [showDogView, setShowDogView] = useState<boolean>(false);
 
   useEffect(() => {
     if (nextSelection) {
@@ -83,13 +85,13 @@ const HomeScreen = () => {
             {/* datatable */}
             { dogs.length === 0 && (
               <div className="d-flex flex-column">
-                <strong>Alert: </strong>
+                <strong>Information: </strong>
                 <span>Use the search form to find dogs or click 'Search' button.</span>
               </div>
             )}
             { dogs.length > 0 && (
               <>
-                <Grid size={size} dogs={dogs} setDogs={setDogs} selection={selection} setSelection={setSelection} isLoading={isLoading} setLoading={setLoading} />
+                <Grid dogs={dogs} selection={selection} setSelection={setSelection} isLoading={isLoading} setShow={setShowDogView} />
                 <div className="d-flex justify-content-center align-items-center gap-3 mt-4">
                   <Button className="rounded" label="Prev" icon='pi pi-arrow-left' disabled={!prevSelection || nextSelection.includes('from=100')} onClick={async() => await getDogs('prev')} />
                   {nextSelection.length > 0 && (<strong>{currentCount} of {total}</strong>)}
@@ -98,6 +100,11 @@ const HomeScreen = () => {
               </>
             )}
           </Col>
+          { showDogView && (
+            <Col xs={12}>
+              <DogView visible={showDogView} setVisible={setShowDogView} />
+            </Col>
+          )}
         </Row>
       </div>
     </Container>

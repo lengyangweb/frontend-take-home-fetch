@@ -13,35 +13,22 @@ export interface Dog {
 }
 
 type GridProps = {
-  size: number;
   dogs: Dog[];
-  setDogs: (param: any) => void;
   selection: any;
   setSelection: (arg: any) => void;
   isLoading: boolean;
-  setLoading: (param: any) => void;
+  setShow: (param: boolean) => void;
 }
 
-const Grid = ({ size, dogs, setDogs, selection, setSelection, isLoading, setLoading  }: GridProps) => {
-  
-  // useEffect(() => {
-  //   async function fetchUsers(){
-  //     setLoading((loading: boolean) => loading = true);
-  //     try {
-  //       const response = await axios.get(`https://frontend-take-home-service.fetch.com/dogs/search?size=100&from=${size}`, { withCredentials: true });
-  //       const result = await axios.post(`https://frontend-take-home-service.fetch.com/dogs`, response.data.resultIds, { withCredentials: true });
-  //       setDogs((current: any) => current = result.data);
-  //       setLoading((loading: boolean) => loading = false);
-  //     } catch (error) {
-  //       console.error(error);
-  //     }
-  //   }
-
-  //   fetchUsers();
-  // }, [])
+const Grid = ({ dogs, selection, setSelection, isLoading, setShow  }: GridProps) => {
 
   function imageBodyTemplate(rowData: Dog) {
     return <img width={'50px'} src={`${rowData.img}`} />
+  }
+
+  function handleSelection(e) {
+    setSelection((current: any) => current = e.value);
+    setShow((current) => current = !current);
   }
 
   if (dogs.length === 0) return;
@@ -56,7 +43,7 @@ const Grid = ({ size, dogs, setDogs, selection, setSelection, isLoading, setLoad
       value={dogs}
       footer={`${dogs.length} Item(s)`}
       selection={selection}
-      onSelectionChange={(e) => setSelection((current: any) => current = e.value)}
+      onSelectionChange={(e) => handleSelection(e)}
       tableStyle={{ minWidth: '50rem' }}
       loading={isLoading}
       >
