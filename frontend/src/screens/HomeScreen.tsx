@@ -7,18 +7,19 @@ import { Button } from "primereact/button"
 import axios from "axios"
 
 const HomeScreen = () => {
+  const size = 100;
   const [dogs, setDogs] = useState<Dog[]>([]);
-  const [size, setSize] = useState(100);
   const [breeds, setBreeds] = useState<{field: string, value: string}[]>([]);
   const [zipCodes, setZipCodes] = useState<string>('');
   const [ageMin, setAgeMin] = useState<string>('');
   const [ageMax, setAgeMax] = useState<string>('');
   const [selection, setSelection] = useState([]);
   const [total, setTotal] = useState(0);
-  const [isLoading, setLoading] = useState(true);
+  const [isLoading, setLoading] = useState(false);
   const [nextSelection, setNext] = useState<string>('');
   const [prevSelection, setPrevious] = useState<string>('');
   const [currentCount, setCurrentCount] = useState<number>(0);
+  const [sort, setSort] = useState<string>('asc');
 
   useEffect(() => {
     if (nextSelection) {
@@ -53,7 +54,7 @@ const HomeScreen = () => {
           <Col xs={12} lg={2} xl={3}>
             <Col xs={12}>
               <div className="d-flex justify-content-center">
-                <Card title="Search">
+                <Card title="Search Form">
                   <Search 
                     size={size} 
                     isLoading={isLoading}
@@ -71,6 +72,8 @@ const HomeScreen = () => {
                     setNext={setNext}
                     setPrevious={setPrevious}
                     setTotal={setTotal}
+                    sort={sort}
+                    setSort={setSort}
                   />
                 </Card>
               </div>
@@ -88,7 +91,7 @@ const HomeScreen = () => {
               <>
                 <Grid size={size} dogs={dogs} setDogs={setDogs} selection={selection} setSelection={setSelection} isLoading={isLoading} setLoading={setLoading} />
                 <div className="d-flex justify-content-center align-items-center gap-3 mt-4">
-                  <Button className="rounded" label="Pev" icon='pi pi-arrow-left' disabled={!prevSelection || nextSelection.includes('from=100')} onClick={async() => await getDogs('prev')} />
+                  <Button className="rounded" label="Prev" icon='pi pi-arrow-left' disabled={!prevSelection || nextSelection.includes('from=100')} onClick={async() => await getDogs('prev')} />
                   {nextSelection.length > 0 && (<strong>{currentCount} of {total}</strong>)}
                   <Button className="rounded" label="Next" icon="pi pi-arrow-right" iconPos="right" disabled={currentCount === total || currentCount > total} onClick={async() => await getDogs('next')} />
                 </div>
