@@ -102,7 +102,7 @@ const HomeScreen = () => {
           </Col>
           { showDogView && (
             <Col xs={12}>
-              <DogView visible={showDogView} setVisible={setShowDogView} />
+              <DogView visible={showDogView} dog={selection} setDogSelected={setSelection} setVisible={setShowDogView} />
             </Col>
           )}
         </Row>

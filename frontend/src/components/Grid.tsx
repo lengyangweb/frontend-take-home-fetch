@@ -46,7 +46,7 @@ const Grid = ({ dogs, selection, setSelection, isLoading, setShow  }: GridProps)
       onSelectionChange={(e) => handleSelection(e)}
       tableStyle={{ minWidth: '50rem' }}
       loading={isLoading}
-      >
+    >
       <Column field="img" header="Image" body={imageBodyTemplate} style={{ width: '15%' }}></Column>
       <Column field="name" header="Name" style={{ width: '25%' }}></Column>
       <Column field="age" header="Age" style={{ width: '15%' }}></Column>
