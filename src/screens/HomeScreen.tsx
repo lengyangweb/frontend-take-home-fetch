@@ -1,6 +1,6 @@
 import axios from "axios"
 import { Card } from "primereact/card"
-import Search from "../components/search"
+import Search from "../components/Search"
 import { Button } from "primereact/button"
 import { useEffect, useState } from "react"
 import DogView from "../components/DogView"
@@ -41,13 +41,13 @@ const HomeScreen = () => {
       const url = `https://frontend-take-home-service.fetch.com${paginator === 'prev' ? prevSelection : nextSelection}`;
       const response = await axios.get(url, { withCredentials: true });
       const { next, prev, resultIds, total } = response.data;
-      if (next) setNext((current: string) => current = next);
-      if (prev) setPrevious((current: string) => current = prev);
-      if (total) setTotal((current: number) => current = total);
+      if (next) setNext((currentNext: string) => currentNext = next);
+      if (prev) setPrevious((currentPrevious: string) => currentPrevious = prev);
+      if (total) setTotal((currentTotal: number) => currentTotal = total);
       
       const result: any = await axios.post(`https://frontend-take-home-service.fetch.com/dogs`, resultIds, { withCredentials: true });
-      setLoading((current: any) => current = false);
-      if (result.data) setDogs((current: any) => current = result.data);
+      setLoading((currentLoading: any) => currentLoading = false);
+      if (result.data) setDogs((currentDogs: any) => currentDogs = result.data);
     } catch (error) {
       console.error(error);
     }
