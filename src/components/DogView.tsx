@@ -23,12 +23,12 @@ type DogViewProps = {
     viewType: string|undefined;
     visible: boolean;
     match: Dog | undefined;
-    dog: Dog | undefined;
+    dog: Dog | any;
     matchSelection: Dog[] | undefined;
     setDogSelected: (param: any) => void;
     setVisible: (param: boolean) => void;
-    setMatchSelection: (param: Dog[]) => void;
-    setViewType: (param: string) => void;
+    setMatchSelection: (param: any) => void;
+    setViewType: (param: string|undefined) => void;
 }
 
 const DogView = ({ viewType, visible, dog, match, matchSelection, setDogSelected, setVisible, setMatchSelection, setViewType }: DogViewProps) => {
@@ -39,7 +39,7 @@ const DogView = ({ viewType, visible, dog, match, matchSelection, setDogSelected
   useEffect(() => {
     if (dog || match) {
         getDogLocation();
-        if (dog && matchSelection && (matchSelection.some((match: Dog) => match.id === dog.id))) setIsInMatchList((status: boolean) => status = true);
+        if (dog && matchSelection && matchSelection.length && (matchSelection.some((match: Dog) => match.id === dog.id))) setIsInMatchList(true);
     }
   }, [dog, matchSelection])
 
@@ -49,18 +49,18 @@ const DogView = ({ viewType, visible, dog, match, matchSelection, setDogSelected
         const zip_code = (viewType === 'dog-view') ? dog?.zip_code : match?.zip_code;
         const response = await axios.post(url, [zip_code], { withCredentials: true });
         const { data } = response;
-        setLocation((current: any) => current = data[0]);
-        setCordinates((current: any) => current = { lat: data[0]?.latitude, lon: data[0]?.longitude });
+        setLocation(data[0]);
+        setCordinates({ lat: data[0]?.latitude, lon: data[0]?.longitude });
     } catch (error) {
         console.error(error);
     }
   }
   
   function onHide() {
-    setDogSelected((selected: any) => selected = undefined);
+    setDogSelected(undefined);
     if (!visible) return; 
     setVisible(false);
-    setViewType((view: string) => view = undefined);
+    setViewType(undefined);
   }
 
   return (
@@ -89,7 +89,7 @@ const DogView = ({ viewType, visible, dog, match, matchSelection, setDogSelected
                                     </div>
                                 </Card>
                                 { (viewType && viewType === 'dog-view') && (
-                                    <Button severity="success" label="Add to Match List" icon='pi pi-plus' iconPos="right" disabled={isInMatchList} onClick={() => setMatchSelection((current: Dog[]) => current = [ ...current, dog] )} />
+                                    <Button severity="success" label="Add to Match List" icon='pi pi-plus' iconPos="right" disabled={isInMatchList} onClick={() => setMatchSelection((currentDogs: Dog[]) => currentDogs = [...currentDogs, dog])} />
                                 )}
                             </div>
                         </Col>

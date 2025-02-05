@@ -1,6 +1,6 @@
 import axios from "axios";
 import { AutoComplete } from "primereact/autocomplete";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { Col } from "react-bootstrap";
 
 type DogBreedsProps = { selectedBreed: any; setSelectedBreed: (param: any) => void }
@@ -47,7 +47,7 @@ const DogBreeds = ({ selectedBreed, setSelectedBreed }: DogBreedsProps) => {
         value={selectedBreed}
         suggestions={breedSuggestion}
         completeMethod={search}
-        onChange={(e) => setSelectedBreed((current: any) => current = e.value)}
+        onChange={(e) => setSelectedBreed(e.value)}
       />
     </Col>
   )

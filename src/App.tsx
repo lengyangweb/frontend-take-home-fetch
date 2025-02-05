@@ -14,12 +14,12 @@ function App() {
   const { userInfo } = useSelector((state: any) => state.auth);
 
   useState(() => {
-    if (userInfo) setIdleInterval((current: any) => current = setInterval(async() => await validateToken(), (10000))); // run every 10 seconds to validate token
+    if (userInfo) setIdleInterval(setInterval(async() => await validateToken(), (10000))); // run every 10 seconds to validate token
   })
 
   async function validateToken() {
     try {
-      const response = await axios.get(`https://frontend-take-home-service.fetch.com/dogs/breeds`, { withCredentials: true });
+      await axios.get(`https://frontend-take-home-service.fetch.com/dogs/breeds`, { withCredentials: true });
       // token is still valid
     } catch (error) {
       console.error(error); // if we 

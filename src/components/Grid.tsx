@@ -1,5 +1,3 @@
-import axios from 'axios';
-import { useEffect, useState } from 'react'
 import { Column } from 'primereact/column';
 import { DataTable } from 'primereact/datatable'
 
@@ -27,10 +25,10 @@ const Grid = ({ dogs, selection, setViewType, setSelection, isLoading, setShow  
     return <img width={'50px'} src={`${rowData.img}`} />
   }
 
-  function handleSelection(e) {
-    setSelection((current: Dog) => current = e.value);
-    setShow((current: boolean) => current = !current);
-    setViewType((view: string) => view = 'dog-view');
+  function handleSelection(e: any) {
+    setSelection(e.value);
+    setShow(true);
+    setViewType('dog-view');
   }
 
   if (dogs.length === 0) return;

@@ -22,12 +22,12 @@ const MatchList = ({ matches, setMatches, setMyMatch, setShowDogView, setViewTyp
   }
 
   function clearMatches() {
-    setMatches((matches: Dog[]) => matches = []);
+    setMatches([]);
   }
 
   function handleRemoveMatch() {
-    setMatches((matches: Dog[]) => matches = matches.filter((match: Dog) => match.id !== selected?.id));
-    setSelected((selected: Dog) => selected = undefined);
+    setMatches(matches.filter((match: Dog) => match.id !== selected?.id));
+    setSelected(undefined);
   }
 
   async function findMatch() {
@@ -37,9 +37,9 @@ const MatchList = ({ matches, setMatches, setMyMatch, setShowDogView, setViewTyp
       if ('data' in matchResponse && matchResponse.data?.match) {
         const result: any = await axios.post(`https://frontend-take-home-service.fetch.com/dogs`, [matchResponse.data?.match], { withCredentials: true });
         if (result.data) {
-          setMyMatch((current: Dog) => current = result.data[0]);
-          setShowDogView((show: boolean) => show = true);
-          setViewType((view: string) => view = 'match');
+          setMyMatch(result.data[0]);
+          setShowDogView(true);
+          setViewType('match');
         }
       }
     } catch (error) {
@@ -68,7 +68,7 @@ const MatchList = ({ matches, setMatches, setMyMatch, setShowDogView, setViewTyp
           scrollHeight='250px' 
           value={matches}
           selection={selected}
-          onSelectionChange={(e) => setSelected((current: Dog) => current = e.value)}
+          onSelectionChange={(e: any) => setSelected(e.value)}
           footer={`${matches.length} Item(s)`}
           tableStyle={{ minWidth: '50rem' }}
         >

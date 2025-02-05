@@ -46,19 +46,19 @@ const Search = ({ size, setDogs, breeds, setBreeds, zipCodes, setZipCodes, ageMi
   async function handleSubmit(e: any) {
     e.preventDefault();
     const url = buildURL();
-    setLoading((current: any) => current = true);
+    setLoading(true);
     try {
       const response = await axios.get(url, { withCredentials: true });
       const { next, prev, resultIds, total } = response.data;
-      if (next) setNext((current: string) => current = next);
-      if (prev) setPrevious((current: string) => current = prev);
-      if (total) setTotal((current: number) => current = total);
+      if (next) setNext(next);
+      if (prev) setPrevious(prev);
+      if (total) setTotal(total);
       
       const result: any = await axios.post(`https://frontend-take-home-service.fetch.com/dogs`, resultIds, { withCredentials: true });
-      setLoading((current: any) => current = false);
-      if (result.data) setDogs((current: any) => current = result.data);
+      setLoading(false);
+      if (result.data) setDogs(result.data);
     } catch (error) {
-      setLoading((current: any) => current = false);
+      setLoading(false);
       console.error(error);
     }
   }
@@ -87,19 +87,19 @@ const Search = ({ size, setDogs, breeds, setBreeds, zipCodes, setZipCodes, ageMi
             <Col xs={12}>
               <Form.Group>
                 <Form.Label htmlFor="zipCodes">ZipCodes:</Form.Label><br/>
-                <InputText className="w-100" type="text" id="zipCodes" value={zipCodes} onChange={(e) => setZipCodes((current: any) => current = e.target.value)} />
+                <InputText className="w-100" type="text" id="zipCodes" value={zipCodes} onChange={(e) => setZipCodes(e.target.value)} />
               </Form.Group>
             </Col>
             <Col xs={12} lg={12}>
               <Form.Group>
                 <Form.Label htmlFor="ageMin">Minimum Age:</Form.Label><br/>
-                <InputText className="w-100" type="number" id="ageMin" value={ageMin} onChange={(e) => setAgeMin((current: any) => current = e.target.value)} />
+                <InputText className="w-100" type="number" id="ageMin" value={ageMin} onChange={(e) => setAgeMin(e.target.value)} />
               </Form.Group>
             </Col>
             <Col xs={12} lg={12}>
               <Form.Group>
                 <Form.Label htmlFor="maxAge">Maximum Age:</Form.Label><br/>
-                <InputText className="w-100" type="number" id="maxAge" value={ageMax} onChange={(e) => setAgeMax((current: any) => current = e.target.value)} />
+                <InputText className="w-100" type="number" id="maxAge" value={ageMax} onChange={(e) => setAgeMax(e.target.value)} />
               </Form.Group>
             </Col>
           </Row>

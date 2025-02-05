@@ -31,23 +31,23 @@ const HomeScreen = () => {
     if (nextSelection) {
       let count = parseInt(nextSelection.split('from=')[1]);
       if (count > total) count = total;
-      setCurrentCount((current: any) => current = count);
+      setCurrentCount(count);
     }
   }, [nextSelection])
 
   async function getDogs(paginator: 'prev'|'next') {
     try {
-      setLoading((current: any) => current = true);
+      setLoading(true);
       const url = `https://frontend-take-home-service.fetch.com${paginator === 'prev' ? prevSelection : nextSelection}`;
       const response = await axios.get(url, { withCredentials: true });
       const { next, prev, resultIds, total } = response.data;
-      if (next) setNext((currentNext: string) => currentNext = next);
-      if (prev) setPrevious((currentPrevious: string) => currentPrevious = prev);
-      if (total) setTotal((currentTotal: number) => currentTotal = total);
+      if (next) setNext(next);
+      if (prev) setPrevious(prev);
+      if (total) setTotal(total);
       
       const result: any = await axios.post(`https://frontend-take-home-service.fetch.com/dogs`, resultIds, { withCredentials: true });
-      setLoading((currentLoading: any) => currentLoading = false);
-      if (result.data) setDogs((currentDogs: any) => currentDogs = result.data);
+      setLoading(false);
+      if (result.data) setDogs(result.data);
     } catch (error) {
       console.error(error);
     }
