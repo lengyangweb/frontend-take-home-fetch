@@ -15,20 +15,22 @@ export interface Dog {
 type GridProps = {
   dogs: Dog[];
   selection: any;
-  setSelection: (arg: any) => void;
   isLoading: boolean;
+  setViewType: (param: string) => void;
+  setSelection: (param: Dog) => void;
   setShow: (param: boolean) => void;
 }
 
-const Grid = ({ dogs, selection, setSelection, isLoading, setShow  }: GridProps) => {
+const Grid = ({ dogs, selection, setViewType, setSelection, isLoading, setShow  }: GridProps) => {
 
   function imageBodyTemplate(rowData: Dog) {
     return <img width={'50px'} src={`${rowData.img}`} />
   }
 
   function handleSelection(e) {
-    setSelection((current: any) => current = e.value);
-    setShow((current) => current = !current);
+    setSelection((current: Dog) => current = e.value);
+    setShow((current: boolean) => current = !current);
+    setViewType((view: string) => view = 'dog-view');
   }
 
   if (dogs.length === 0) return;

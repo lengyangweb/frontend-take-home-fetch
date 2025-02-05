@@ -20,30 +20,34 @@ interface Coordinates {
 }
 
 type DogViewProps = {
+    viewType: string|undefined;
     visible: boolean;
+    match: Dog | undefined;
     dog: Dog | undefined;
-    matchSelection: string[] | undefined;
+    matchSelection: Dog[] | undefined;
     setDogSelected: (param: any) => void;
     setVisible: (param: boolean) => void;
-    setMatchSelection: (param: Dog[] | undefined) => void;
+    setMatchSelection: (param: Dog[]) => void;
+    setViewType: (param: string) => void;
 }
 
-const DogView = ({ visible, dog, matchSelection, setDogSelected, setVisible, setMatchSelection }: DogViewProps) => {
+const DogView = ({ viewType, visible, dog, match, matchSelection, setDogSelected, setVisible, setMatchSelection, setViewType }: DogViewProps) => {
   const [location, setLocation] = useState<Location>();
   const [isInMatchList, setIsInMatchList] = useState<boolean>(false);
   const [coordinates, setCordinates] = useState<Coordinates>();
 
   useEffect(() => {
-    if (dog) {
+    if (dog || match) {
         getDogLocation();
-        if (matchSelection && (matchSelection.some((match: Dog) => match.id === dog.id))) setIsInMatchList((status: boolean) => status = true);
+        if (dog && matchSelection && (matchSelection.some((match: Dog) => match.id === dog.id))) setIsInMatchList((status: boolean) => status = true);
     }
   }, [dog, matchSelection])
 
   async function getDogLocation() {
     try {
         const url = `https://frontend-take-home-service.fetch.com/locations`;
-        const response = await axios.post(url, [dog?.zip_code], { withCredentials: true });
+        const zip_code = (viewType === 'dog-view') ? dog?.zip_code : match?.zip_code;
+        const response = await axios.post(url, [zip_code], { withCredentials: true });
         const { data } = response;
         setLocation((current: any) => current = data[0]);
         setCordinates((current: any) => current = { lat: data[0]?.latitude, lon: data[0]?.longitude });
@@ -54,17 +58,19 @@ const DogView = ({ visible, dog, matchSelection, setDogSelected, setVisible, set
   
   function onHide() {
     setDogSelected((selected: any) => selected = undefined);
-    if (!visible) return; setVisible(false);
+    if (!visible) return; 
+    setVisible(false);
+    setViewType((view: string) => view = undefined);
   }
 
   return (
     <>
         { location && (
             <div className="card flex justify-content-center">
-                <Dialog header={dog?.name} visible={visible} style={{ width: '50vw' }} onHide={() => onHide()} draggable={false}>
+                <Dialog header={dog?.name || `Congratulation! Your match is ... ${match?.name}!`} visible={visible} style={{ width: '50vw' }} onHide={() => onHide()} draggable={false}>
                     <Row>
                         <Col xs={6}>
-                            { (dog?.img) && (<img style={{ width: '100%' }} src={dog.img} alt="dog image" />) }
+                            { (dog?.img || match?.img) && (<img style={{ width: '100%' }} src={dog?.img || match?.img} alt="dog image" />) }
                         </Col>
                         <Col xs={6}>
                             <div className="d-flex flex-column gap-3">
@@ -82,7 +88,9 @@ const DogView = ({ visible, dog, matchSelection, setDogSelected, setVisible, set
                                         <span><strong>Latitude: </strong> {coordinates?.lat}</span>
                                     </div>
                                 </Card>
-                                <Button severity="success" label="Add to Match List" icon='pi pi-plus' iconPos="right" disabled={isInMatchList} onClick={() => setMatchSelection((current: Dog[]) => current = [ ...current, dog] )} />
+                                { (viewType && viewType === 'dog-view') && (
+                                    <Button severity="success" label="Add to Match List" icon='pi pi-plus' iconPos="right" disabled={isInMatchList} onClick={() => setMatchSelection((current: Dog[]) => current = [ ...current, dog] )} />
+                                )}
                             </div>
                         </Col>
                     </Row>

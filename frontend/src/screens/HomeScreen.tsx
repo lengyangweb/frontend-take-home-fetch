@@ -1,12 +1,12 @@
-import { useEffect, useState } from "react"
-import { Card } from "primereact/card"
-import Grid, { Dog } from "../components/Grid"
-import Search from "../components/search"
-import { Col, Container, Row } from "react-bootstrap"
-import { Button } from "primereact/button"
 import axios from "axios"
+import { Card } from "primereact/card"
+import Search from "../components/search"
+import { Button } from "primereact/button"
+import { useEffect, useState } from "react"
 import DogView from "../components/DogView"
+import Grid, { Dog } from "../components/Grid"
 import MatchList from "../components/MatchList"
+import { Col, Container, Row } from "react-bootstrap"
 
 const HomeScreen = () => {
   const size = 100;
@@ -24,6 +24,8 @@ const HomeScreen = () => {
   const [sort, setSort] = useState<string>('asc');
   const [showDogView, setShowDogView] = useState<boolean>(false);
   const [matchSelection, setMatchSelection] = useState<Dog[]>([]);
+  const [myMatch, setMyMatch] = useState<Dog>();
+  const [viewType, setViewType] = useState<string|undefined>('');
 
   useEffect(() => {
     if (nextSelection) {
@@ -93,7 +95,14 @@ const HomeScreen = () => {
             )}
             { dogs.length > 0 && (
               <>
-                <Grid dogs={dogs} selection={selection} setSelection={setSelection} isLoading={isLoading} setShow={setShowDogView} />
+                <Grid 
+                  dogs={dogs} 
+                  selection={selection} 
+                  setSelection={setSelection} 
+                  isLoading={isLoading} 
+                  setShow={setShowDogView} 
+                  setViewType={setViewType} 
+                />
                 <div className="d-flex justify-content-center align-items-center gap-3 mt-4">
                   <Button className="rounded" label="Prev" icon='pi pi-arrow-left' disabled={!prevSelection || nextSelection.includes('from=100')} onClick={async() => await getDogs('prev')} />
                   {nextSelection.length > 0 && (<strong>{currentCount} of {total}</strong>)}
@@ -104,12 +113,28 @@ const HomeScreen = () => {
           </Col>
           { matchSelection.length > 0 && (
             <Col xs={12} xl={4}>
-              <MatchList matches={matchSelection} setMatches={setMatchSelection} />
+              <MatchList 
+                matches={matchSelection} 
+                setMatches={setMatchSelection} 
+                setMyMatch={setMyMatch} 
+                setShowDogView={setShowDogView} 
+                setViewType={setViewType}
+              />
             </Col>
           )}
           { showDogView && (
             <Col xs={12}>
-              <DogView visible={showDogView} dog={selection} matchSelection={matchSelection} setDogSelected={setSelection} setVisible={setShowDogView} setMatchSelection={setMatchSelection} />
+              <DogView 
+                viewType={viewType}
+                visible={showDogView} 
+                dog={selection} 
+                match={myMatch}
+                matchSelection={matchSelection} 
+                setDogSelected={setSelection} 
+                setVisible={setShowDogView} 
+                setMatchSelection={setMatchSelection}
+                setViewType={setViewType}
+              />
             </Col>
           )}
         </Row>
