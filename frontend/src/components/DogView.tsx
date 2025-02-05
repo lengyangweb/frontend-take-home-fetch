@@ -3,6 +3,8 @@ import { Col, Row } from "react-bootstrap";
 import { Dialog } from "primereact/dialog";
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { Card } from "primereact/card";
+import { Button } from "primereact/button";
 
 interface Location {
     zip_code: string
@@ -19,24 +21,30 @@ interface Coordinates {
 
 type DogViewProps = {
     visible: boolean;
-    dog: Dog;
+    dog: Dog | undefined;
+    matchSelection: string[] | undefined;
     setDogSelected: (param: any) => void;
     setVisible: (param: boolean) => void;
+    setMatchSelection: (param: Dog[] | undefined) => void;
 }
 
-const DogView = ({ visible, dog, setDogSelected, setVisible }: DogViewProps) => {
+const DogView = ({ visible, dog, matchSelection, setDogSelected, setVisible, setMatchSelection }: DogViewProps) => {
   const [location, setLocation] = useState<Location>();
+  const [isInMatchList, setIsInMatchList] = useState<boolean>(false);
   const [coordinates, setCordinates] = useState<Coordinates>();
 
   useEffect(() => {
-    if (dog) getDogLocation();
-  }, [dog])
+    if (dog) {
+        getDogLocation();
+        if (matchSelection && (matchSelection.some((match: Dog) => match.id === dog.id))) setIsInMatchList((status: boolean) => status = true);
+    }
+  }, [dog, matchSelection])
 
   async function getDogLocation() {
     try {
         const url = `https://frontend-take-home-service.fetch.com/locations`;
-        const response = await axios.post(url, [dog.zip_code], { withCredentials: true });
-        const { data, error } = response;
+        const response = await axios.post(url, [dog?.zip_code], { withCredentials: true });
+        const { data } = response;
         setLocation((current: any) => current = data[0]);
         setCordinates((current: any) => current = { lat: data[0]?.latitude, lon: data[0]?.longitude });
     } catch (error) {
@@ -53,23 +61,28 @@ const DogView = ({ visible, dog, setDogSelected, setVisible }: DogViewProps) => 
     <>
         { location && (
             <div className="card flex justify-content-center">
-                <Dialog header={dog.name} visible={visible} style={{ width: '50vw' }} onHide={() => onHide()} draggable={false}>
+                <Dialog header={dog?.name} visible={visible} style={{ width: '50vw' }} onHide={() => onHide()} draggable={false}>
                     <Row>
                         <Col xs={6}>
-                            { ('img' in dog) && (<img style={{ width: '100%' }} src={dog.img} alt="dog image" />) }
+                            { (dog?.img) && (<img style={{ width: '100%' }} src={dog.img} alt="dog image" />) }
                         </Col>
                         <Col xs={6}>
-                            <h5>Location:</h5>
-                            <div className="d-flex flex-column">
-                                <span><strong>City: </strong> {location?.city}</span>
-                                <span><strong>State: </strong> {location?.state}</span>
-                                <span><strong>Zipcode: </strong> {location?.zip_code}</span>
-                                <span><strong>County: </strong> {location?.county}</span>
-                            </div>
-                            <h5>Coordinates:</h5>
-                            <div className="d-flex flex-column">
-                                <span><strong>Longitude: </strong> {coordinates?.lon}</span>
-                                <span><strong>Latitude: </strong> {coordinates?.lat}</span>
+                            <div className="d-flex flex-column gap-3">
+                                <Card title="Location">
+                                    <div className="d-flex flex-column">
+                                        <span><strong>City: </strong> {location?.city}</span>
+                                        <span><strong>State: </strong> {location?.state}</span>
+                                        <span><strong>Zipcode: </strong> {location?.zip_code}</span>
+                                        <span><strong>County: </strong> {location?.county}</span>
+                                    </div>
+                                </Card>
+                                <Card title="Coordinates">
+                                    <div className="d-flex flex-column">
+                                        <span><strong>Longitude: </strong> {coordinates?.lon}</span>
+                                        <span><strong>Latitude: </strong> {coordinates?.lat}</span>
+                                    </div>
+                                </Card>
+                                <Button severity="success" label="Add to Match List" icon='pi pi-plus' iconPos="right" disabled={isInMatchList} onClick={() => setMatchSelection((current: Dog[]) => current = [ ...current, dog] )} />
                             </div>
                         </Col>
                     </Row>

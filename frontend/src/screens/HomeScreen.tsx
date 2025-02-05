@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react"
 import { Card } from "primereact/card"
 import Grid, { Dog } from "../components/Grid"
-import Search from "../components/Search"
+import Search from "../components/search"
 import { Col, Container, Row } from "react-bootstrap"
 import { Button } from "primereact/button"
 import axios from "axios"
 import DogView from "../components/DogView"
+import MatchList from "../components/MatchList"
 
 const HomeScreen = () => {
   const size = 100;
@@ -14,7 +15,7 @@ const HomeScreen = () => {
   const [zipCodes, setZipCodes] = useState<string>('');
   const [ageMin, setAgeMin] = useState<string>('');
   const [ageMax, setAgeMax] = useState<string>('');
-  const [selection, setSelection] = useState([]);
+  const [selection, setSelection] = useState<Dog>();
   const [total, setTotal] = useState(0);
   const [isLoading, setLoading] = useState(false);
   const [nextSelection, setNext] = useState<string>('');
@@ -22,6 +23,7 @@ const HomeScreen = () => {
   const [currentCount, setCurrentCount] = useState<number>(0);
   const [sort, setSort] = useState<string>('asc');
   const [showDogView, setShowDogView] = useState<boolean>(false);
+  const [matchSelection, setMatchSelection] = useState<Dog[]>([]);
 
   useEffect(() => {
     if (nextSelection) {
@@ -100,9 +102,14 @@ const HomeScreen = () => {
               </>
             )}
           </Col>
+          { matchSelection.length > 0 && (
+            <Col xs={12} xl={4}>
+              <MatchList matches={matchSelection} setMatches={setMatchSelection} />
+            </Col>
+          )}
           { showDogView && (
             <Col xs={12}>
-              <DogView visible={showDogView} dog={selection} setDogSelected={setSelection} setVisible={setShowDogView} />
+              <DogView visible={showDogView} dog={selection} matchSelection={matchSelection} setDogSelected={setSelection} setVisible={setShowDogView} setMatchSelection={setMatchSelection} />
             </Col>
           )}
         </Row>
