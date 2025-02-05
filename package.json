@@ -1,7 +1,7 @@
 {
   "name": "frontend-take-home-fetch",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
   "type": "module",
   "homepage": "https://lengyangweb.github.io/frontend-take-home-fetch",
   "scripts": {
