@@ -23,18 +23,18 @@ const DogBreeds = ({ selectedBreed, setSelectedBreed }: DogBreedsProps) => {
   function search(event: any) {
         // Timeout to emulate a network connection
         setTimeout(() => {
-          let _filteredCountries;
+          let _filteredBreeds;
 
           if (!event.query.trim().length) {
-              _filteredCountries = [...breeds];
+              _filteredBreeds = [...breeds];
           }
           else {
-              _filteredCountries = breeds.filter((breed) => {
+              _filteredBreeds = breeds.filter((breed) => {
                   return breed.value.toLowerCase().startsWith(event.query.toLowerCase());
               });
           }
 
-          setBreedsSuggestion(_filteredCountries);
+          setBreedsSuggestion(_filteredBreeds);
       }, 250);
   }
     
