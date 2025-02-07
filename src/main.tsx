@@ -12,6 +12,7 @@ import { Provider } from 'react-redux'
 import { store } from './store.tsx'
 import PrivateRoute from './components/PrivateRoute.tsx'
 import HomeScreen from './screens/HomeScreen.tsx'
+import { StrictMode } from 'react';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -25,7 +26,9 @@ const router = createBrowserRouter(
 )
 
 createRoot(document.getElementById('root')!).render(
-  <Provider store={store}>
-    <RouterProvider router={router} />
-  </Provider>
+  <StrictMode>
+    <Provider store={store}>
+      <RouterProvider router={router} />
+    </Provider>
+  </StrictMode>
 )
