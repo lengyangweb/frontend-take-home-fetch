@@ -52,7 +52,7 @@ const MatchList = ({ matches, setMatches, setMyMatch, setShowDogView, setViewTyp
       <Col xs={12}>
         <div className="d-flex flex-column">
           <h5>Match List:</h5>
-          <div className="d-flex gap-2">
+          <div className="d-flex flex-column flex-lg-row gap-2">
             <Button className="rounded" severity="danger" label="Remove" disabled={!selected} onClick={handleRemoveMatch}/>
             <Button className="rounded" severity="secondary" label="Clear List" iconPos="right" onClick={clearMatches} />
             <Button className="rounded" severity="success" label="Match me with this list" onClick={findMatch} />

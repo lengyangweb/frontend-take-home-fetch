@@ -56,8 +56,8 @@ const HomeScreen = () => {
   return (
     <Container fluid>
       <div className="d-flex justify-content-center align-items-center" style={{ marginTop: '80px' }}>
-        <Row className="col-sm-12 col-md-8 col-lg-6 col-xl-12">
-          <Col xs={12} lg={2} xl={3}>
+        <Row className="col-12 col-md-8 col-lg-6 col-xl-12">
+          <Col className="my-4" xs={12} md={12} lg={12} xl={3}>
             <Col xs={12}>
               <div className="d-flex justify-content-center">
                 <Card title="Search Form">
@@ -85,7 +85,7 @@ const HomeScreen = () => {
               </div>
             </Col>
           </Col>
-          <Col xs={12} lg={10} xl={9}>
+          <Col className="my-3" xs={12} md={12} lg={12} xl={9}>
             {/* datatable */}
             { dogs.length === 0 && (
               <div className="d-flex flex-column">
@@ -112,7 +112,7 @@ const HomeScreen = () => {
             )}
           </Col>
           { matchSelection.length > 0 && (
-            <Col xs={12} xl={4}>
+            <Col xs={12} md={12} xl={4}>
               <MatchList 
                 matches={matchSelection} 
                 setMatches={setMatchSelection} 

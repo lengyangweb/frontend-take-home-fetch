@@ -66,13 +66,13 @@ const DogView = ({ viewType, visible, dog, match, matchSelection, setDogSelected
   return (
     <>
         { location && (
-            <div className="card flex justify-content-center">
-                <Dialog header={dog?.name || `Congratulation! Your match is ... ${match?.name}!`} visible={visible} style={{ width: '50vw' }} onHide={() => onHide()} draggable={false}>
+            <div className="card d-flex justify-content-center">
+                <Dialog header={dog?.name || `Congratulation! Your match is ... ${match?.name}!`} visible={visible} style={{ minWidth: '50vw', maxWidth: '90vw' }} onHide={() => onHide()} draggable={false}>
                     <Row>
-                        <Col xs={6}>
+                        <Col xs={12} xl={6}>
                             { (dog?.img || match?.img) && (<img style={{ width: '100%' }} src={dog?.img || match?.img} alt="dog image" />) }
                         </Col>
-                        <Col xs={6}>
+                        <Col xs={12} xl={6}>
                             <div className="d-flex flex-column gap-3">
                                 <Card title="Location">
                                     <div className="d-flex flex-column">
