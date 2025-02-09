@@ -1,4 +1,3 @@
-import axios from "axios"
 import { Card } from "primereact/card"
 import Search from "../components/Search"
 import { Button } from "primereact/button"
@@ -7,6 +6,7 @@ import DogView from "../components/DogView"
 import Grid, { Dog } from "../components/Grid"
 import MatchList from "../components/MatchList"
 import { Col, Container, Row } from "react-bootstrap"
+import { useGetBreedsMutation, useGetDogsMutation } from "../slices/apiSlice"
 
 const HomeScreen = () => {
   const size = 100;
@@ -27,6 +27,9 @@ const HomeScreen = () => {
   const [myMatch, setMyMatch] = useState<Dog>();
   const [viewType, setViewType] = useState<string|undefined>('');
 
+  const [getBreeds] = useGetBreedsMutation();
+  const [getAllDog] = useGetDogsMutation();
+
   useEffect(() => {
     if (nextSelection) {
       let count = parseInt(nextSelection.split('from=')[1]);
@@ -39,15 +42,15 @@ const HomeScreen = () => {
     try {
       setLoading(true);
       const url = `https://frontend-take-home-service.fetch.com${paginator === 'prev' ? prevSelection : nextSelection}`;
-      const response = await axios.get(url, { withCredentials: true });
-      const { next, prev, resultIds, total } = response.data;
+      const response = await getBreeds(url).unwrap();
+      const { next, prev, resultIds, total } = response;
       if (next) setNext(next);
       if (prev) setPrevious(prev);
       if (total) setTotal(total);
       
-      const result: any = await axios.post(`https://frontend-take-home-service.fetch.com/dogs`, resultIds, { withCredentials: true });
+      const result = await getAllDog(resultIds).unwrap();
       setLoading(false);
-      if (result.data) setDogs(result.data);
+      if (Array.isArray(result)) setDogs(result);
     } catch (error) {
       console.error(error);
     }

@@ -1,21 +1,28 @@
-import axios from 'axios';
+// import axios from 'axios';
 import { Button } from 'react-bootstrap'
 import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom';
 import { logout } from '../slices/authSlice';
+import { useLogoutMutation } from '../slices/apiSlice';
 
 const LogoutButton = () => {
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [logoutUser] = useLogoutMutation();
 
   async function handleLogout() {
     try {
-        const response = await axios.post('https://frontend-take-home-service.fetch.com/auth/logout', {}, {withCredentials: true});
-        console.log(response);
+        await logoutUser(undefined).unwrap();
         dispatch(logout());
         navigate('/');
-    } catch (error) {
+    } catch (error: { originalStatus: number; data: string }) {
+      const { originalStatus, data } = error;
+      if (originalStatus === 200 && data === 'OK') {
+        dispatch(logout());
+        navigate('/');
+        return;
+      }
         console.error(error);
     }
   }

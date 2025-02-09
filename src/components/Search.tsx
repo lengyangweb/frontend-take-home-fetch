@@ -5,6 +5,7 @@ import { Button } from "primereact/button"
 import { InputText } from "primereact/inputtext"
 import { Col, Form, Row } from "react-bootstrap"
 import { RadioButton } from "primereact/radiobutton";
+import { useGetBreedsMutation, useGetBreedsQuery, useGetDogsMutation } from "../slices/apiSlice";
 
 type SearchProps = {
   size: number;
@@ -29,6 +30,9 @@ type SearchProps = {
 
 const Search = ({ size, setDogs, breeds, setBreeds, zipCodes, setZipCodes, ageMin, setAgeMin, ageMax, setAgeMax, isLoading, setLoading, setTotal, setPrevious, setNext, sort, setSort}: SearchProps) => {
 
+  const [getBreeds] = useGetBreedsMutation();
+  const [getDogs] = useGetDogsMutation();
+
   function buildURL() {
     let url = `https://frontend-take-home-service.fetch.com/dogs/search?size=${size}&sort=breed:${sort}`;
     const filterBreeds = breeds.map((breed) => {
@@ -48,15 +52,15 @@ const Search = ({ size, setDogs, breeds, setBreeds, zipCodes, setZipCodes, ageMi
     const url = buildURL();
     setLoading(true);
     try {
-      const response = await axios.get(url, { withCredentials: true });
-      const { next, prev, resultIds, total } = response.data;
+      const response = await getBreeds(url).unwrap();
+      const { next, prev, resultIds, total } = response;
       if (next) setNext(next);
       if (prev) setPrevious(prev);
       if (total) setTotal(total);
       
-      const result: any = await axios.post(`https://frontend-take-home-service.fetch.com/dogs`, resultIds, { withCredentials: true });
+      const result = await getDogs(resultIds).unwrap();
       setLoading(false);
-      if (result.data) setDogs(result.data);
+      if (Array.isArray(result)) setDogs(result);
     } catch (error) {
       setLoading(false);
       console.error(error);

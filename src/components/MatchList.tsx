@@ -5,6 +5,7 @@ import { useState } from "react";
 import { Col, Row } from "react-bootstrap";
 import { Button } from "primereact/button";
 import axios from "axios";
+import { useGetDogsMutation, useGetMatchMutation } from "../slices/apiSlice";
 
 type MatchListProps = {
   matches: Dog[];
@@ -16,6 +17,9 @@ type MatchListProps = {
 
 const MatchList = ({ matches, setMatches, setMyMatch, setShowDogView, setViewType }: MatchListProps) => {
   const [selected, setSelected] = useState<Dog>();
+
+  const [getMatch] = useGetMatchMutation();
+  const [getDogs] = useGetDogsMutation();
 
   function imageBodyTemplate(rowData: Dog) {
     return <img width={'50px'} src={`${rowData.img}`} />
@@ -33,11 +37,11 @@ const MatchList = ({ matches, setMatches, setMyMatch, setShowDogView, setViewTyp
   async function findMatch() {
     try {
       const matchIDs = matches.map((match: Dog) => (match.id));
-      const matchResponse = await axios.post(`https://frontend-take-home-service.fetch.com/dogs/match`, matchIDs, { withCredentials: true });
-      if ('data' in matchResponse && matchResponse.data?.match) {
-        const result: any = await axios.post(`https://frontend-take-home-service.fetch.com/dogs`, [matchResponse.data?.match], { withCredentials: true });
-        if (result.data) {
-          setMyMatch(result.data[0]);
+      const matchResponse = await getMatch(matchIDs).unwrap();
+      if ('match' in matchResponse && matchResponse.match) {
+        const result = await getDogs([matchResponse.match]).unwrap();
+        if (result && Array.isArray(result)) {
+          setMyMatch(result[0]);
           setShowDogView(true);
           setViewType('match');
         }

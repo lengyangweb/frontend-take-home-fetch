@@ -5,6 +5,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { Card } from "primereact/card";
 import { Button } from "primereact/button";
+import { useGetLocationMutation } from "../slices/apiSlice";
 
 interface Location {
     zip_code: string
@@ -36,6 +37,8 @@ const DogView = ({ viewType, visible, dog, match, matchSelection, setDogSelected
   const [isInMatchList, setIsInMatchList] = useState<boolean>(false);
   const [coordinates, setCordinates] = useState<Coordinates>();
 
+  const [getLocation] = useGetLocationMutation();
+
   useEffect(() => {
     if (dog || match) {
         getDogLocation();
@@ -45,12 +48,11 @@ const DogView = ({ viewType, visible, dog, match, matchSelection, setDogSelected
 
   async function getDogLocation() {
     try {
-        const url = `https://frontend-take-home-service.fetch.com/locations`;
         const zip_code = (viewType === 'dog-view') ? dog?.zip_code : match?.zip_code;
-        const response = await axios.post(url, [zip_code], { withCredentials: true });
-        const { data } = response;
-        setLocation(data[0]);
-        setCordinates({ lat: data[0]?.latitude, lon: data[0]?.longitude });
+        const locations = await getLocation([zip_code]).unwrap();
+        if (!locations || !Array.isArray(locations)) return;
+        setLocation(locations[0]);
+        setCordinates({ lat: locations[0]?.latitude, lon: locations[0]?.longitude });
     } catch (error) {
         console.error(error);
     }

@@ -1,11 +1,10 @@
-import axios from "axios";
-import { useEffect, useRef, useState } from "react"
-import { Button } from "primereact/button";
-
 import { toast } from "react-toastify";
+import { Button } from "primereact/button";
 import { useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+import { useEffect, useRef, useState } from "react"
 import { setCredentials } from "../slices/authSlice";
+import { useLoginMutation } from "../slices/apiSlice";
+import { useDispatch, useSelector } from "react-redux";
 
 
 const LoginForm = () => {
@@ -14,6 +13,7 @@ const LoginForm = () => {
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const [login] = useLoginMutation();
 
   const { userInfo } = useSelector((state: any) => state.auth);
 
@@ -23,17 +23,23 @@ const LoginForm = () => {
     }
   }, [userInfo, navigate]);
 
-  async function handleLogin(e: any) {
+  async function handleLogin(e: SubmitEvent) {
     e.preventDefault();
     const credentials: {name:string; email:string} = { name: userRef.current.name.value, email: userRef.current.email.value };
     try {
-      const response = await axios.post('https://frontend-take-home-service.fetch.com/auth/login', credentials, { withCredentials: true });
-      if (response.status !== 200) return toast.error(`Unable to login`);
+      const response = await login(credentials).unwrap();
+      if (!response) return;
       dispatch(setCredentials({ ...credentials }));
       navigate('/home');
-      localStorage.setItem('userInfo', JSON.stringify(credentials));
-    } catch (error) {
+    } catch (error: {data: string, originaStatus: number}) {
+      const { data, originalStatus } = error;
+      if (originalStatus === 200 && data === 'OK') {
+        dispatch(setCredentials({ ...credentials }));
+        navigate('/home');
+        return;
+      }
       console.error(error);
+      toast.error('Something went wrong.');
     }
   }
 
