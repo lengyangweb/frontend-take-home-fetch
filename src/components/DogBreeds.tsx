@@ -1,18 +1,23 @@
-import axios from "axios";
-import { AutoComplete } from "primereact/autocomplete";
-import { useMemo, useState } from "react";
 import { Col } from "react-bootstrap";
-import { useGetBreedsMutation } from "../slices/apiSlice";
-import { Dog } from "./Grid";
+import { useMemo, useState } from "react";
 import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
 import { logout } from "../slices/authSlice";
+import { useNavigate } from "react-router-dom";
+import { AutoComplete } from "primereact/autocomplete";
+import { useGetBreedsMutation } from "../slices/apiSlice";
 
-type DogBreedsProps = { selectedBreed: any; setSelectedBreed: (param: any) => void }
+export type TError = {
+  status: string;
+  data: string;
+  originalStatus: number;
+  error: string;
+}
+type TField = { field: string; value: string };
+type DogBreedsProps = { selectedBreed: TField; setSelectedBreed: (param: TField) => void }
 
 const DogBreeds = ({ selectedBreed, setSelectedBreed }: DogBreedsProps) => {
-  const [breeds, setBreeds] = useState<{field: string; value: string}[]>([]);
-  const [breedSuggestion, setBreedsSuggestion] = useState<any[]>([]);
+  const [breeds, setBreeds] = useState<TField[]>([]);
+  const [breedSuggestion, setBreedsSuggestion] = useState<TField[]>([]);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -24,17 +29,16 @@ const DogBreeds = ({ selectedBreed, setSelectedBreed }: DogBreedsProps) => {
     try {
       // const response = await axios.get(, { withCredentials: true });
       const url = `https://frontend-take-home-service.fetch.com/dogs/breeds`;
-      const response: any = await getDogBreeds(url);
-      debugger;
+      const response: string[] = await getDogBreeds(url).unwrap();
       if (!response) return;
-      if ('error' in response && response.error?.originalStatus === 401) {
+      if (Array.isArray(response)) setBreeds(response.map((breed: string) => ({ field: breed, value: breed })));
+    } catch (error: TError) {
+      console.error(error);
+      if (error.originalStatus === 401) {
         dispatch(logout());
         navigate('/');
         return;
       }
-      if (Array.isArray(response)) setBreeds(response.map((breed: any) => ({ field: breed, value: breed })));
-    } catch (error) {
-      console.error(error);
     }
   }
 

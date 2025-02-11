@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from "react"
 import { setCredentials } from "../slices/authSlice";
 import { useLoginMutation } from "../slices/apiSlice";
 import { useDispatch, useSelector } from "react-redux";
+import { TError } from "./DogBreeds";
 
 
 const LoginForm = () => {
@@ -15,7 +16,7 @@ const LoginForm = () => {
   const dispatch = useDispatch();
   const [login] = useLoginMutation();
 
-  const { userInfo } = useSelector((state: any) => state.auth);
+  const { userInfo } = useSelector((state: { auth: { userInfo: { username: string; email: string }}}) => state.auth);
 
   useEffect(() => {
     if (userInfo) {
@@ -31,7 +32,7 @@ const LoginForm = () => {
       if (!response) return;
       dispatch(setCredentials({ ...credentials }));
       navigate('/home');
-    } catch (error: {data: string, originaStatus: number}) {
+    } catch (error: TError) {
       const { data, originalStatus } = error;
       if (originalStatus === 200 && data === 'OK') {
         dispatch(setCredentials({ ...credentials }));
