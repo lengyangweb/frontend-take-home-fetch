@@ -5,9 +5,12 @@ import { ToastContainer } from 'react-toastify';
 import { PrimeReactProvider } from 'primereact/api';
 import { Outlet, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
+import { useGetBreedsMutation } from './slices/apiSlice';
 
 function App() {
   const [interval, setIdleInterval] = useState<any>();
+
+  const [getBreeds] = useGetBreedsMutation();
   const dispath = useDispatch();
   const navigate = useNavigate();
 
@@ -19,7 +22,8 @@ function App() {
 
   async function validateToken() {
     try {
-      await axios.get(`https://frontend-take-home-service.fetch.com/dogs/breeds`, { withCredentials: true });
+      const url = `https://frontend-take-home-service.fetch.com/dogs/breeds`;
+      await getBreeds(url).unwrap();
       // token is still valid
     } catch (error) {
       console.error(error); // if we 

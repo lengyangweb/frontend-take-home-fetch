@@ -13,7 +13,7 @@ export const apiSlice = createApi({
   endpoints: (builder) => ({
     login: builder.mutation({
       query(credentials: { name: string, email: string }) {
-        return { url: 'auth/login', method: 'POST', body: credentials }
+        return { url: 'auth/login', method: 'POST', body: credentials, header: { 'accept': 'application/json' } }
       }
     }),
     getBreeds: (builder.mutation({
