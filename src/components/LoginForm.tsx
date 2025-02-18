@@ -52,7 +52,7 @@ const LoginForm = () => {
       </div>
       <div className="form-group my-2">
         <label htmlFor="email" className="form-label">Email:</label>
-        <input type="email" className="form-control" id="email" autoComplete="email" value={credentials.email} onChange={(e) => setUserCredential((current) => current = { ...current, email: e.target.value })} />
+        <input type="password" className="form-control" id="email" autoComplete="email" value={credentials.email} onChange={(e) => setUserCredential((current) => current = { ...current, email: e.target.value })} />
       </div>
       <div className="form-group mt-4">
         <div className="d-flex justify-content-center">
